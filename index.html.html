@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABL – All Business Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9A84C;--gold-light:#E8C87A;--gold-dark:#8B6914;
+    --black:#0A0A0A;--dark:#111111;--dark2:#1A1A1A;--dark3:#242424;
+    --white:#F5F0E8;--gray:#888880;
+    --success:#4CAF80;--danger:#E05252;
+    --wave:#1DC8FF;--wave-dark:#0090C0;
+    --orange:#FF6B00;--orange-dark:#C44D00;
+    --radius:12px;--radius-lg:20px;
+    --shadow-gold:0 4px 30px rgba(201,168,76,.2);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);min-height:100vh;overflow-x:hidden;}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:3px}
+  h1,h2,h3,h4,h5{font-family:'Syne',sans-serif;}
+  .gold{color:var(--gold)}.hidden{display:none!important}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .badge-gold{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3);}
+  .badge-green{background:rgba(76,175,128,.15);color:var(--success);border:1px solid rgba(76,175,128,.3);}
+  .badge-red{background:rgba(224,82,82,.15);color:var(--danger);border:1px solid rgba(224,82,82,.3);}
+  .badge-wave{background:rgba(29,200,255,.12);color:var(--wave);border:1px solid rgba(29,200,255,.3);}
+  .badge-orange{background:rgba(255,107,0,.12);color:var(--orange);border:1px solid rgba(255,107,0,.3);}
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--radius);font-family:'Syne',sans-serif;font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all .25s ease;text-decoration:none;letter-spacing:.3px;}
+  .btn-gold{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);color:var(--black);box-shadow:0 4px 20px rgba(201,168,76,.35);}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,.5);}
+  .btn-outline{background:transparent;border:1.5px solid rgba(201,168,76,.4);color:var(--gold);}
+  .btn-outline:hover{background:rgba(201,168,76,.08);border-color:var(--gold);}
+  .btn-dark{background:var(--dark3);color:var(--white);border:1px solid rgba(255,255,255,.08);}
+  .btn-dark:hover{background:var(--dark2);border-color:rgba(255,255,255,.15);}
+  .btn-sm{padding:7px 14px;font-size:12px;}
+  .btn-danger{background:rgba(224,82,82,.15);color:var(--danger);border:1px solid rgba(224,82,82,.3);}
+  .btn-danger:hover{background:rgba(224,82,82,.25);}
+  .btn-wave{background:linear-gradient(135deg,var(--wave-dark),var(--wave));color:#fff;box-shadow:0 4px 20px rgba(29,200,255,.3);}
+  .btn-wave:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(29,200,255,.45);}
+  .btn-orange{background:linear-gradient(135deg,var(--orange-dark),var(--orange));color:#fff;box-shadow:0 4px 20px rgba(255,107,0,.3);}
+  .btn-orange:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,0,.45);}
+  /* INPUTS */
+  .input-group{display:flex;flex-direction:column;gap:6px;}
+  .input-group label{font-size:13px;font-weight:500;color:var(--gray);letter-spacing:.3px;}
+  .input-field{background:var(--dark3);border:1.5px solid rgba(255,255,255,.07);border-radius:var(--radius);padding:12px 16px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color .2s;width:100%;outline:none;}
+  .input-field:focus{border-color:rgba(201,168,76,.5);}
+  .input-field::placeholder{color:rgba(255,255,255,.25);}
+  select.input-field{cursor:pointer;}
+  textarea.input-field{resize:vertical;min-height:90px;}
+  /* CARDS */
+  .card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:24px;transition:border-color .2s;}
+  .card:hover{border-color:rgba(201,168,76,.15);}
+  .card-stat{background:linear-gradient(135deg,var(--dark2),var(--dark3));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:22px 24px;}
+  .card-stat .stat-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--gold);margin:6px 0 4px;}
+  .card-stat .stat-label{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;}
+  .card-stat .stat-sub{font-size:12px;color:var(--success);margin-top:4px;}
+  /* TOAST */
+  #toast{position:fixed;bottom:30px;right:30px;padding:14px 22px;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:14px;font-weight:600;z-index:9999;transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);max-width:340px;pointer-events:none;}
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{background:var(--success);color:#fff;}
+  #toast.error{background:var(--danger);color:#fff;}
+  #toast.info{background:var(--gold);color:var(--black);}
+  #toast.wave-t{background:var(--wave);color:var(--black);}
+  #toast.orange-t{background:var(--orange);color:#fff;}
+  /* MODAL */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .modal{background:var(--dark2);border:1px solid rgba(201,168,76,.2);border-radius:var(--radius-lg);padding:32px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;animation:slideUp .3s cubic-bezier(.34,1.3,.64,1);}
+  @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+  .modal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+  .modal-close{width:32px;height:32px;border-radius:8px;background:var(--dark3);border:none;color:var(--gray);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+  .modal-close:hover{background:var(--danger);color:#fff;}
+  .form-grid{display:grid;gap:16px;}
+  .form-grid-2{grid-template-columns:1fr 1fr;}
+  /* NAV */
+  #nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;background:rgba(10,10,10,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+  .nav-brand{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;cursor:pointer;}
+  .nav-brand span{color:var(--gold);}
+  .nav-actions{display:flex;align-items:center;gap:12px;}
+  .nav-icon-btn{position:relative;width:42px;height:42px;border-radius:var(--radius);background:var(--dark3);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .2s;}
+  .nav-icon-btn:hover{border-color:var(--gold);}
+  .nav-badge{position:absolute;top:-6px;right:-6px;background:var(--gold);color:var(--black);min-width:18px;height:18px;border-radius:9px;padding:0 4px;font-size:10px;font-weight:800;font-family:'Syne',sans-serif;display:flex;align-items:center;justify-content:center;}
+  .nav-badge.red{background:var(--danger);color:#fff;}
+  .user-pill{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;background:var(--dark3);border:1px solid rgba(255,255,255,.08);border-radius:30px;cursor:pointer;transition:all .2s;font-size:13px;font-weight:500;}
+  .user-pill:hover{border-color:rgba(201,168,76,.4);}
+  .user-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--black);}
+  /* PAGES */
+  .page{display:none;padding-top:88px;min-height:100vh;}
+  .page.active{display:block;animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .container{max-width:1280px;margin:0 auto;padding:0 32px;}
+  /* HERO */
+  #hero{min-height:100vh;padding-top:0!important;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(201,168,76,.08),transparent 70%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(201,168,76,.04),transparent 60%);}
+  .hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(201,168,76,1) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,1) 1px,transparent 1px);background-size:60px 60px;}
+  .hero-content{position:relative;z-index:1;max-width:780px;}
+  .hero-tag{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:30px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);font-size:12px;font-weight:600;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:28px;}
+  .hero-tag::before{content:'●';font-size:8px;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .hero-title{font-size:clamp(48px,7vw,88px);font-weight:800;line-height:.95;letter-spacing:-3px;margin-bottom:24px;}
+  .hero-title .line2{color:var(--gold);display:block;}
+  .hero-sub{font-size:18px;color:var(--gray);max-width:500px;margin:0 auto 40px;line-height:1.6;font-weight:300;}
+  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .pay-logos{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+  .pay-logo{padding:7px 16px;border-radius:30px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;}
+  .hero-stats{display:flex;gap:48px;justify-content:center;margin-top:52px;padding-top:36px;border-top:1px solid rgba(255,255,255,.06);}
+  .hero-stat-val{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--gold);}
+  .hero-stat-lbl{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
+  /* GRIDS */
+  .shops-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px;}
+  /* SHOP CARD */
+  .shop-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all .3s ease;}
+  .shop-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.3);box-shadow:var(--shadow-gold);}
+  .shop-banner{height:120px;display:flex;align-items:center;justify-content:center;font-size:48px;}
+  .shop-info{padding:18px;}
+  .shop-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;}
+  .shop-desc{font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.5;}
+  .shop-meta{display:flex;align-items:center;justify-content:space-between;}
+  /* PRODUCT CARD */
+  .product-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);overflow:hidden;transition:all .3s ease;}
+  .product-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.3);box-shadow:var(--shadow-gold);}
+  .product-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;background:linear-gradient(135deg,var(--dark3),var(--dark2));}
+  .product-badge{position:absolute;top:12px;right:12px;}
+  .product-info{padding:16px;}
+  .product-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;}
+  .product-shop{font-size:11px;color:var(--gold);margin-bottom:8px;}
+  .product-price{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--gold);}
+  .product-actions{display:flex;gap:8px;margin-top:12px;}
+  /* DASHBOARD */
+  .dashboard-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 68px);}
+  .sidebar{background:var(--dark2);border-right:1px solid rgba(255,255,255,.06);padding:24px 16px;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto;}
+  .sidebar-title{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;padding:0 12px;margin-bottom:8px;margin-top:20px;}
+  .sidebar-title:first-child{margin-top:0;}
+  .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;color:var(--gray);transition:all .2s;margin-bottom:2px;position:relative;}
+  .sidebar-item:hover{background:var(--dark3);color:var(--white);}
+  .sidebar-item.active{background:rgba(201,168,76,.1);color:var(--gold);}
+  .sidebar-item .icon{font-size:16px;width:20px;text-align:center;}
+  .sidebar-notif{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--danger);color:#fff;border-radius:10px;font-size:10px;font-weight:800;padding:1px 6px;font-family:'Syne',sans-serif;}
+  .dash-content{padding:32px;overflow-y:auto;}
+  /* TABLE */
+  .table-wrap{overflow-x:auto;border-radius:var(--radius);}
+  table{width:100%;border-collapse:collapse;}
+  th{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);padding:12px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,.06);}
+  td{padding:14px 16px;font-size:14px;border-bottom:1px solid rgba(255,255,255,.04);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  /* CART PANEL */
+  #cart-panel{position:fixed;top:0;right:-440px;bottom:0;width:440px;background:var(--dark2);border-left:1px solid rgba(201,168,76,.15);z-index:200;transition:right .35s cubic-bezier(.34,1.1,.64,1);display:flex;flex-direction:column;padding:28px;}
+  #cart-panel.open{right:0;}
+  .cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+  .cart-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+  .cart-items{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+  .cart-item{display:flex;gap:14px;padding:14px;background:var(--dark3);border-radius:var(--radius);border:1px solid rgba(255,255,255,.05);}
+  .cart-item-emoji{font-size:32px;display:flex;align-items:center;}
+  .cart-item-info{flex:1;}
+  .cart-item-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin-bottom:2px;}
+  .cart-item-price{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--gold);}
+  .cart-remove{background:none;border:none;color:var(--gray);cursor:pointer;font-size:18px;transition:color .2s;align-self:flex-start;}
+  .cart-remove:hover{color:var(--danger);}
+  .cart-footer{padding-top:20px;border-top:1px solid rgba(255,255,255,.06);margin-top:20px;}
+  .cart-total{display:flex;justify-content:space-between;margin-bottom:16px;}
+  .cart-total-lbl{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;}
+  .cart-total-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold);}
+  /* PAYMENT */
+  .pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+  .pay-method{padding:20px;border-radius:var(--radius-lg);border:2px solid rgba(255,255,255,.08);cursor:pointer;text-align:center;transition:all .25s;}
+  .pay-method:hover{transform:translateY(-2px);}
+  .pay-method.wave-m.selected{border-color:var(--wave);background:rgba(29,200,255,.08);}
+  .pay-method.om-m.selected{border-color:var(--orange);background:rgba(255,107,0,.08);}
+  .pay-method-logo{font-size:36px;margin-bottom:8px;font-family:'Syne',sans-serif;font-weight:900;}
+  .pay-method-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;}
+  .pay-method-sub{font-size:11px;color:var(--gray);margin-top:3px;}
+  .pay-progress{display:flex;gap:8px;margin-bottom:24px;}
+  .pay-prog-dot{height:4px;border-radius:2px;flex:1;background:var(--dark3);transition:background .3s;}
+  .pay-prog-dot.done{background:var(--gold);}
+  .pay-prog-dot.act{background:var(--gold-light);}
+  .pay-phone-wrap{display:flex;}
+  .pay-prefix{background:var(--dark3);border:1.5px solid rgba(255,255,255,.07);border-right:none;border-radius:var(--radius) 0 0 var(--radius);padding:12px 14px;color:var(--gray);font-size:14px;display:flex;align-items:center;white-space:nowrap;}
+  .pay-num{flex:1;background:var(--dark3);border:1.5px solid rgba(255,255,255,.07);border-left:none;border-radius:0 var(--radius) var(--radius) 0;padding:12px 16px;color:var(--white);font-size:14px;outline:none;font-family:'DM Sans',sans-serif;}
+  .pay-num:focus{border-color:rgba(201,168,76,.5);}
+  .otp-inputs{display:flex;gap:10px;justify-content:center;margin:16px 0;}
+  .otp-box{width:52px;height:60px;border-radius:var(--radius);background:var(--dark3);border:1.5px solid rgba(255,255,255,.1);text-align:center;font-size:24px;font-weight:800;font-family:'Syne',sans-serif;color:var(--gold);outline:none;transition:border-color .2s;}
+  .otp-box:focus{border-color:var(--gold);}
+  @keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+  .pay-receipt{background:var(--dark3);border-radius:var(--radius);padding:16px;margin-top:16px;}
+  .pay-receipt-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;}
+  .pay-receipt-row:last-child{border-bottom:none;font-weight:700;color:var(--gold);}
+  /* MESSAGING */
+  #msg-panel{position:fixed;top:0;right:-480px;bottom:0;width:480px;background:var(--dark2);border-left:1px solid rgba(201,168,76,.15);z-index:200;transition:right .35s cubic-bezier(.34,1.1,.64,1);display:flex;flex-direction:column;}
+  #msg-panel.open{right:0;}
+  .msg-header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+  .msg-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+  .conv-list{flex:1;overflow-y:auto;}
+  .conv-item{padding:16px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s;}
+  .conv-item:hover,.conv-item.active{background:rgba(201,168,76,.06);}
+  .conv-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--black);flex-shrink:0;}
+  .conv-info{flex:1;min-width:0;}
+  .conv-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:2px;}
+  .conv-last{font-size:12px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .conv-meta{text-align:right;flex-shrink:0;}
+  .conv-time{font-size:11px;color:var(--gray);margin-bottom:4px;}
+  .conv-unread{background:var(--gold);color:var(--black);border-radius:10px;font-size:10px;font-weight:800;padding:1px 7px;font-family:'Syne',sans-serif;display:inline-block;}
+  .chat-window{display:flex;flex-direction:column;height:100%;}
+  .chat-header{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+  .chat-back{background:none;border:none;color:var(--gray);cursor:pointer;font-size:20px;transition:color .2s;line-height:1;}
+  .chat-back:hover{color:var(--white);}
+  .chat-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
+  .chat-status{font-size:11px;color:var(--success);}
+  .chat-msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;}
+  .bubble{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word;}
+  .bubble.sent{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:var(--black);align-self:flex-end;border-radius:16px 16px 4px 16px;}
+  .bubble.recv{background:var(--dark3);border:1px solid rgba(255,255,255,.06);align-self:flex-start;border-radius:16px 16px 16px 4px;}
+  .bubble-time{font-size:10px;margin-top:3px;}
+  .bubble-time.sent{color:rgba(0,0,0,.4);text-align:right;}
+  .bubble-time.recv{color:var(--gray);}
+  .chat-input-area{padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:10px;flex-shrink:0;}
+  .chat-input{flex:1;background:var(--dark3);border:1.5px solid rgba(255,255,255,.08);border-radius:30px;padding:10px 18px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+  .chat-input:focus{border-color:rgba(201,168,76,.5);}
+  .chat-send{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:transform .2s;}
+  .chat-send:hover{transform:scale(1.1);}
+  .chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--gray);}
+  /* MISC */
+  .search-bar{position:relative;max-width:600px;margin:0 auto 32px;}
+  .search-bar input{width:100%;padding:14px 20px 14px 52px;background:var(--dark2);border:1.5px solid rgba(255,255,255,.08);border-radius:40px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s;}
+  .search-bar input:focus{border-color:rgba(201,168,76,.5);}
+  .search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--gray);font-size:18px;}
+  .page-header{margin-bottom:32px;}
+  .page-header h2{font-size:32px;font-weight:800;margin-bottom:6px;}
+  .page-header p{color:var(--gray);font-size:15px;}
+  .page-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+  .category-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+  .cat-tab{padding:8px 16px;border-radius:30px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:transparent;color:var(--gray);transition:all .2s;}
+  .cat-tab:hover{border-color:rgba(201,168,76,.3);color:var(--white);}
+  .cat-tab.active{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4);color:var(--gold);}
+  .shop-header-banner{height:220px;border-radius:var(--radius-lg);margin-bottom:24px;display:flex;align-items:center;justify-content:center;font-size:80px;}
+  .shop-profile{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;margin-bottom:32px;}
+  .shop-logo{width:80px;height:80px;border-radius:16px;border:3px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--dark3);margin-top:-40px;}
+  .shop-profile-name{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:6px;}
+  .shop-profile-desc{color:var(--gray);font-size:14px;line-height:1.6;}
+  .shop-profile-stats{display:flex;gap:24px;margin-top:12px;}
+  .shop-ps .val{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--gold);display:block;}
+  .shop-ps .lbl{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;display:block;}
+  .order-row{display:flex;align-items:center;gap:14px;padding:14px;background:var(--dark3);border-radius:var(--radius);border:1px solid rgba(255,255,255,.05);margin-bottom:10px;}
+  .profit-bar{height:6px;border-radius:3px;background:var(--dark3);overflow:hidden;margin-top:8px;}
+  .profit-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .6s ease;}
+  /* AUTH */
+  #auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .auth-card{width:100%;max-width:460px;background:var(--dark2);border:1px solid rgba(201,168,76,.15);border-radius:var(--radius-lg);padding:40px;}
+  .auth-logo{text-align:center;margin-bottom:8px;font-family:'Syne',sans-serif;font-size:28px;font-weight:800;}
+  .auth-logo span{color:var(--gold);}
+  .auth-sub{text-align:center;color:var(--gray);font-size:14px;margin-bottom:32px;}
+  .auth-tabs{display:flex;gap:4px;background:var(--dark3);border-radius:10px;padding:4px;margin-bottom:28px;}
+  .auth-tab{flex:1;padding:9px;text-align:center;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--gray);transition:all .2s;border:none;background:none;}
+  .auth-tab.active{background:var(--dark2);color:var(--gold);}
+  .role-card{padding:14px 18px;border-radius:var(--radius);border:1.5px solid rgba(255,255,255,.08);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px;}
+  .role-card:hover{border-color:rgba(201,168,76,.3);}
+  .role-card.selected{border-color:var(--gold);background:rgba(201,168,76,.06);}
+  @media(max-width:768px){
+    .dashboard-layout{grid-template-columns:1fr;}.sidebar{display:none;}
+    #nav{padding:0 16px;}.container{padding:0 16px;}
+    .form-grid-2{grid-template-columns:1fr;}
+    .hero-stats{gap:24px;}
+    #cart-panel,#msg-panel{width:100%;right:-100%;}
+    .pay-methods{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+<div id="overlay" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;backdrop-filter:blur(4px)"></div>
+<div id="modal-container"></div>
+
+<!-- CART -->
+<div id="cart-panel">
+  <div class="cart-header"><div class="cart-title">🛒 Mon Panier</div><button class="modal-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-items" id="cart-items-list"></div>
+  <div class="cart-footer">
+    <div class="cart-total"><span class="cart-total-lbl">Total</span><span class="cart-total-val" id="cart-total-val">0 FCFA</span></div>
+    <button class="btn btn-gold" style="width:100%;justify-content:center" onclick="closeCart();openPayment()">💳 Payer maintenant →</button>
+  </div>
+</div>
+
+<!-- MESSAGING -->
+<div id="msg-panel">
+  <div class="msg-header"><div class="msg-title">💬 Messages</div><button class="modal-close" onclick="closeMsg()">✕</button></div>
+  <div id="msg-body" style="flex:1;display:flex;flex-direction:column;overflow:hidden;"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-brand" onclick="goHome()">ABL <span>●</span></div>
+  <div class="nav-actions">
+    <div id="nav-cart-btn" class="nav-icon-btn hidden" onclick="openCart()" title="Panier">🛒<div class="nav-badge" id="cart-count">0</div></div>
+    <div id="nav-msg-btn" class="nav-icon-btn hidden" onclick="openMsg()" title="Messages">💬<div class="nav-badge red hidden" id="msg-badge">0</div></div>
+    <div id="nav-auth-btns" style="display:flex;gap:8px">
+      <button class="btn btn-outline btn-sm" onclick="showPage('auth')">Connexion</button>
+      <button class="btn btn-gold btn-sm" onclick="showPage('auth')">S'inscrire</button>
+    </div>
+    <div id="nav-user-pill" class="hidden">
+      <div class="user-pill" onclick="goToDashboard()">
+        <div class="user-avatar" id="user-avatar-text">U</div>
+        <span id="user-name-display">Utilisateur</span>
+      </div>
+    </div>
+    <button class="btn btn-dark btn-sm hidden" id="nav-logout" onclick="logout()">Déconnexion</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="page-home" class="page active" style="padding-top:0">
+  <div id="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-tag">🇸🇳 La Marketplace Africaine de Référence</div>
+      <h1 class="hero-title">All Business<span class="line2">Life.</span></h1>
+      <p class="hero-sub">Ouvrez votre boutique, vendez vos produits, touchez des milliers de clients — tout en un seul endroit.</p>
+      <div class="hero-actions">
+        <button class="btn btn-gold" onclick="showPage('shops')">Explorer les boutiques →</button>
+        <button class="btn btn-outline" onclick="openRegisterSeller()">Ouvrir ma boutique</button>
+      </div>
+      <div class="pay-logos">
+        <div class="pay-logo" style="background:rgba(29,200,255,.1);border:1px solid rgba(29,200,255,.3);color:var(--wave)">〜 Wave</div>
+        <div class="pay-logo" style="background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.3);color:var(--orange)">◉ Orange Money</div>
+        <div class="pay-logo" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);color:var(--gold)">💬 Messagerie</div>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-val" id="stat-shops">0</div><div class="hero-stat-lbl">Boutiques actives</div></div>
+        <div><div class="hero-stat-val" id="stat-products">0</div><div class="hero-stat-lbl">Produits disponibles</div></div>
+        <div><div class="hero-stat-val" id="stat-sales">0</div><div class="hero-stat-lbl">Ventes réalisées</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOPS -->
+<section id="page-shops" class="page">
+  <div class="container">
+    <div class="page-header"><h2>Toutes les boutiques <span class="gold">ABL</span></h2><p>Découvrez nos vendeurs partenaires</p></div>
+    <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Rechercher une boutique..." oninput="filterShops(this.value)"></div>
+    <div class="shops-grid" id="shops-grid"></div>
+  </div>
+</section>
+
+<!-- SHOP DETAIL -->
+<section id="page-shop-detail" class="page">
+  <div class="container">
+    <button class="btn btn-dark btn-sm" onclick="showPage('shops')" style="margin-bottom:20px">← Retour</button>
+    <div id="shop-detail-content"></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="page-products" class="page">
+  <div class="container">
+    <div class="page-header"><h2>Tous les produits <span class="gold">ABL</span></h2><p>Sélectionnés par nos vendeurs partenaires</p></div>
+    <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Rechercher un produit..." oninput="filterProducts(this.value)" id="product-search"></div>
+    <div class="category-tabs" id="cat-tabs"></div>
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+</section>
+
+<!-- AUTH -->
+<section id="page-auth" class="page" style="padding-top:0">
+  <div id="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">ABL <span>●</span></div>
+      <div class="auth-sub">All Business Life — La marketplace qui vous libère</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Connexion</button>
+        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Inscription</button>
+      </div>
+      <div id="auth-login" class="form-grid">
+        <div class="input-group"><label>Email</label><input class="input-field" type="email" id="login-email" placeholder="votre@email.com"></div>
+        <div class="input-group"><label>Mot de passe</label><input class="input-field" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
+        <button class="btn btn-gold" onclick="login()" style="width:100%;justify-content:center">Se connecter →</button>
+        <p style="text-align:center;font-size:12px;color:var(--gray)">Démo : <strong style="color:var(--gold)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="89e8ede4e0e7c9e8ebe5a7eae6e4">[email&#160;protected]</a></strong> · <strong style="color:var(--gold)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="394a5c55555c4b79585b55175a5654">[email&#160;protected]</a></strong> · <strong style="color:var(--gold)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3556595c505b41755457591b565a58">[email&#160;protected]</a></strong><br>Mot de passe : <strong>abl2024</strong></p>
+      </div>
+      <div id="auth-register" class="hidden form-grid">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="role-card selected" id="role-client" onclick="selectRole('client')"><span style="font-size:24px">🛍️</span><div><div style="font-family:'Syne',sans-serif;font-weight:700">Client</div><div style="font-size:12px;color:var(--gray)">Acheter des produits</div></div></div>
+          <div class="role-card" id="role-seller" onclick="selectRole('seller')"><span style="font-size:24px">🏪</span><div><div style="font-family:'Syne',sans-serif;font-weight:700">Vendeur</div><div style="font-size:12px;color:var(--gray)">Ouvrir ma boutique</div></div></div>
+        </div>
+        <div class="input-group"><label>Nom complet</label><input class="input-field" id="reg-name" placeholder="Amadou Diallo"></div>
+        <div class="input-group"><label>Email</label><input class="input-field" type="email" id="reg-email" placeholder="votre@email.com"></div>
+        <div class="input-group"><label>Mot de passe</label><input class="input-field" type="password" id="reg-pass" placeholder="••••••••"></div>
+        <div id="shop-fields" class="hidden form-grid">
+          <div class="input-group"><label>Nom de la boutique</label><input class="input-field" id="reg-shop-name" placeholder="Mon Super Shop"></div>
+          <div class="input-group"><label>Description</label><textarea class="input-field" id="reg-shop-desc" placeholder="Décrivez votre boutique..."></textarea></div>
+        </div>
+        <button class="btn btn-gold" onclick="register()" style="width:100%;justify-content:center">Créer mon compte →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENT DASH -->
+<section id="page-client-dash" class="page" style="padding-top:68px">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Navigation</div>
+      <div class="sidebar-item active" onclick="clientSection('overview')"><span class="icon">📊</span> Vue d'ensemble</div>
+      <div class="sidebar-item" onclick="clientSection('orders')"><span class="icon">📦</span> Mes commandes</div>
+      <div class="sidebar-item" onclick="clientSection('messages')"><span class="icon">💬</span> Messages<span class="sidebar-notif hidden" id="sb-unread-c">0</span></div>
+      <div class="sidebar-title">Explorer</div>
+      <div class="sidebar-item" onclick="showPage('shops')"><span class="icon">🏪</span> Boutiques</div>
+      <div class="sidebar-item" onclick="showPage('products')"><span class="icon">🛒</span> Produits</div>
+    </aside>
+    <div class="dash-content" id="client-dash-content"></div>
+  </div>
+</section>
+
+<!-- SELLER DASH -->
+<section id="page-seller-dash" class="page" style="padding-top:68px">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Ma boutique</div>
+      <div class="sidebar-item active" onclick="sellerSection('overview')"><span class="icon">📊</span> Vue d'ensemble</div>
+      <div class="sidebar-item" onclick="sellerSection('products')"><span class="icon">📦</span> Mes produits</div>
+      <div class="sidebar-item" onclick="sellerSection('orders')"><span class="icon">🛍️</span> Commandes reçues</div>
+      <div class="sidebar-item" onclick="sellerSection('messages')"><span class="icon">💬</span> Messages<span class="sidebar-notif hidden" id="sb-unread-s">0</span></div>
+      <div class="sidebar-item" onclick="sellerSection('shop-settings')"><span class="icon">⚙️</span> Ma boutique</div>
+    </aside>
+    <div class="dash-content" id="seller-dash-content"></div>
+  </div>
+</section>
+
+<!-- ADMIN DASH -->
+<section id="page-admin-dash" class="page" style="padding-top:68px">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Administration</div>
+      <div class="sidebar-item active" onclick="adminSection('overview')"><span class="icon">📊</span> Vue d'ensemble</div>
+      <div class="sidebar-item" onclick="adminSection('sellers')"><span class="icon">🏪</span> Vendeurs</div>
+      <div class="sidebar-item" onclick="adminSection('clients')"><span class="icon">👥</span> Clients</div>
+      <div class="sidebar-item" onclick="adminSection('orders')"><span class="icon">📦</span> Commandes</div>
+      <div class="sidebar-item" onclick="adminSection('payments')"><span class="icon">💳</span> Paiements</div>
+      <div class="sidebar-item" onclick="adminSection('commissions')"><span class="icon">💰</span> Commissions (1%)</div>
+      <div class="sidebar-item" onclick="adminSection('settings')"><span class="icon">⚙️</span> Paramètres</div>
+    </aside>
+    <div class="dash-content" id="admin-dash-content"></div>
+  </div>
+</section>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  ABL v2 · Wave · Orange Money · Messagerie
+// ═══════════════════════════════════════════════════
+
+const STATE={currentUser:null,cart:[],selectedRole:'client',clientSec:'overview',sellerSec:'overview',adminSec:'overview',convId:null,payMethod:'wave',payPhone:''};
+
+function loadDB(){
+  const def={
+    users:[
+      {id:'u1',email:'admin@abl.com',pass:'abl2024',name:'Super Admin',role:'admin'},
+      {id:'u2',email:'seller@abl.com',pass:'abl2024',name:'Mamadou Diallo',role:'seller',shopId:'s1'},
+      {id:'u3',email:'client@abl.com',pass:'abl2024',name:'Fatou Ndiaye',role:'client'},
+      {id:'u4',email:'seller2@abl.com',pass:'abl2024',name:'Aïssatou Bah',role:'seller',shopId:'s2'},
+    ],
+    shops:[
+      {id:'s1',ownerId:'u2',name:'Dakar Fashion House',desc:'Mode africaine contemporaine — boubous, bazin, wax et plus.',emoji:'👗',color:'#8B1A1A',category:'Mode',products:['p1','p2','p3'],rating:4.8,sales:142},
+      {id:'s2',ownerId:'u4',name:'TechHub Dakar',desc:'Smartphones, accessoires et électronique au meilleur prix.',emoji:'📱',color:'#1A3A8B',category:'Tech',products:['p4','p5'],rating:4.6,sales:89},
+      {id:'s3',ownerId:'u2',name:'Saveurs du Terroir',desc:'Produits locaux, épices, huiles et céréales du Sénégal.',emoji:'🌶️',color:'#2D6A2D',category:'Alimentation',products:['p6','p7'],rating:4.9,sales:203},
+    ],
+    products:[
+      {id:'p1',shopId:'s1',name:'Boubou Grand Bazin',price:45000,emoji:'👘',category:'Mode',desc:'Boubou en grand bazin riche, brodé main.',stock:15,sold:42},
+      {id:'p2',shopId:'s1',name:'Robe Wax Ankara',price:18500,emoji:'👗',category:'Mode',desc:'Robe en tissu wax imprimé ankara.',stock:30,sold:67},
+      {id:'p3',shopId:'s1',name:'Ensemble Foulard Wax',price:8000,emoji:'🧣',category:'Mode',desc:'Foulard et pochette en wax.',stock:50,sold:28},
+      {id:'p4',shopId:'s2',name:'iPhone 14 Pro',price:620000,emoji:'📱',category:'Tech',desc:'Apple iPhone 14 Pro 256Go, garantie 1 an.',stock:5,sold:12},
+      {id:'p5',shopId:'s2',name:'Écouteurs Bluetooth',price:25000,emoji:'🎧',category:'Tech',desc:'Écouteurs sans fil, réduction de bruit, 30h.',stock:20,sold:34},
+      {id:'p6',shopId:'s3',name:'Huile de Palme Rouge',price:3500,emoji:'🫙',category:'Alimentation',desc:'Huile de palme rouge naturelle, 1 litre.',stock:100,sold:89},
+      {id:'p7',shopId:'s3',name:'Épices Yassa Mix',price:2500,emoji:'🌶️',category:'Alimentation',desc:'Mélange épices yassa.',stock:200,sold:156},
+    ],
+    orders:[
+      {id:'o1',clientId:'u3',items:[{productId:'p2',qty:1}],total:18500,status:'livré',date:'2024-02-10',commission:185,payMethod:'wave',payPhone:'77 000 00 01'},
+      {id:'o2',clientId:'u3',items:[{productId:'p6',qty:3}],total:10500,status:'en cours',date:'2024-02-14',commission:105,payMethod:'orange',payPhone:'76 000 00 02'},
+      {id:'o3',clientId:'u3',items:[{productId:'p5',qty:1}],total:25000,status:'expédié',date:'2024-02-15',commission:250,payMethod:'wave',payPhone:'77 000 00 01'},
+    ],
+    messages:[
+      {id:'m1',from:'u3',to:'u2',text:'Bonjour ! Est-ce que le boubou est disponible en taille XL ?',ts:Date.now()-3600000,read:true},
+      {id:'m2',from:'u2',to:'u3',text:'Oui bien sûr ! Nous avons du XL en stock. Souhaitez-vous passer commande ?',ts:Date.now()-3000000,read:true},
+      {id:'m3',from:'u3',to:'u2',text:'Parfait ! Je vais l\'ajouter au panier. Merci !',ts:Date.now()-2400000,read:false},
+      {id:'m4',from:'u3',to:'u4',text:'Bonjour, livrez-vous à Thiès ?',ts:Date.now()-7200000,read:false},
+    ],
+    nextId:300,
+  };
+  try{const s=localStorage.getItem('abl_v2');return s?JSON.parse(s):def;}catch(e){return def;}
+}
+function saveDB(){try{localStorage.setItem('abl_v2',JSON.stringify(DB));}catch(e){}}
+let DB=loadDB();
+
+function genId(){return 'x'+(++DB.nextId);}
+function fmt(n){return Number(n).toLocaleString('fr-FR')+' FCFA';}
+function nowDate(){return new Date().toISOString().split('T')[0];}
+function hhmm(ts){return new Date(ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+
+function toast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+type;
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',3500);
+}
+function showModal(html){document.getElementById('modal-container').innerHTML='<div class="modal-backdrop" onclick="if(event.target===this)closeModalDirect()">'+html+'</div>';}
+function closeModalDirect(){document.getElementById('modal-container').innerHTML='';}
+
+// NAVIGATION
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  window.scrollTo(0,0);
+  if(p==='shops')renderShops();
+  if(p==='products')renderProducts();
+  if(p==='client-dash')renderClientDash();
+  if(p==='seller-dash')renderSellerDash();
+  if(p==='admin-dash')renderAdminDash();
+  if(p==='home')updateHeroStats();
+}
+function goHome(){showPage('home');}
+function goToDashboard(){
+  if(!STATE.currentUser)return showPage('auth');
+  const r=STATE.currentUser.role;
+  showPage(r==='admin'?'admin-dash':r==='seller'?'seller-dash':'client-dash');
+}
+
+// AUTH
+function switchAuthTab(tab){
+  document.getElementById('auth-login').classList.toggle('hidden',tab!=='login');
+  document.getElementById('auth-register').classList.toggle('hidden',tab!=='register');
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-register').classList.toggle('active',tab==='register');
+}
+function selectRole(role){
+  STATE.selectedRole=role;
+  document.getElementById('role-client').classList.toggle('selected',role==='client');
+  document.getElementById('role-seller').classList.toggle('selected',role==='seller');
+  document.getElementById('shop-fields').classList.toggle('hidden',role!=='seller');
+}
+function login(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const user=DB.users.find(u=>u.email===email&&u.pass===pass);
+  if(!user)return toast('Email ou mot de passe incorrect','error');
+  setUser(user);toast('Bienvenue, '+user.name+' ! 👋','success');goToDashboard();
+}
+function register(){
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const pass=document.getElementById('reg-pass').value;
+  const role=STATE.selectedRole;
+  if(!name||!email||!pass)return toast('Veuillez remplir tous les champs','error');
+  if(DB.users.find(u=>u.email===email))return toast('Email déjà utilisé','error');
+  const user={id:genId(),email,pass,name,role};
+  if(role==='seller'){
+    const shopName=document.getElementById('reg-shop-name').value.trim();
+    const shopDesc=document.getElementById('reg-shop-desc').value.trim();
+    if(!shopName)return toast('Nommez votre boutique','error');
+    const emojis=['🏪','🛍️','✨','🎁','💫','🌟'];
+    const colors=['#8B1A1A','#1A3A8B','#2D6A2D','#6B4A8B','#8B6A1A'];
+    const shop={id:genId(),ownerId:user.id,name:shopName,desc:shopDesc||'Bienvenue !',emoji:emojis[Math.floor(Math.random()*emojis.length)],color:colors[Math.floor(Math.random()*colors.length)],category:'Général',products:[],rating:5.0,sales:0};
+    DB.shops.push(shop);user.shopId=shop.id;
+  }
+  DB.users.push(user);saveDB();setUser(user);
+  toast('Compte créé ! Bienvenue '+name+' 🎉','success');goToDashboard();
+}
+function setUser(user){
+  STATE.currentUser=user;
+  document.getElementById('nav-auth-btns').classList.add('hidden');
+  document.getElementById('nav-user-pill').classList.remove('hidden');
+  document.getElementById('nav-logout').classList.remove('hidden');
+  document.getElementById('nav-msg-btn').classList.remove('hidden');
+  document.getElementById('user-name-display').textContent=user.name.split(' ')[0];
+  document.getElementById('user-avatar-text').textContent=user.name[0].toUpperCase();
+  if(user.role==='client')document.getElementById('nav-cart-btn').classList.remove('hidden');
+  updateMsgBadge();
+}
+function logout(){
+  STATE.currentUser=null;STATE.cart=[];updateCartCount();
+  document.getElementById('nav-auth-btns').style.display='flex';
+  ['nav-user-pill','nav-logout','nav-cart-btn','nav-msg-btn'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  toast('Déconnexion réussie','info');showPage('home');
+}
+function openRegisterSeller(){showPage('auth');setTimeout(()=>{switchAuthTab('register');selectRole('seller');},100);}
+
+// HERO
+function updateHeroStats(){
+  animCount('stat-shops',DB.shops.length);
+  animCount('stat-products',DB.products.length);
+  animCount('stat-sales',DB.orders.length*12);
+}
+function animCount(id,target){
+  const el=document.getElementById(id);if(!el)return;
+  let c=0;const inc=Math.ceil(target/40);
+  const t=setInterval(()=>{c=Math.min(c+inc,target);el.textContent=c;if(c>=target)clearInterval(t);},30);
+}
+
+// SHOPS
+function renderShops(filter=''){
+  const shops=DB.shops.filter(s=>s.name.toLowerCase().includes(filter.toLowerCase())||s.desc.toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('shops-grid').innerHTML=shops.length?shops.map(s=>`
+    <div class="shop-card" onclick="openShop('${s.id}')">
+      <div class="shop-banner" style="background:linear-gradient(135deg,${s.color}80,${s.color}20)">${s.emoji}</div>
+      <div class="shop-info">
+        <div class="shop-name">${s.name}</div>
+        <div class="shop-desc">${s.desc}</div>
+        <div class="shop-meta"><span class="badge badge-gold">${s.category}</span><span style="font-size:12px;color:var(--gray)">⭐ ${s.rating} · ${s.products.length} produits</span></div>
+      </div>
+    </div>`).join(''):'<p style="color:var(--gray);grid-column:1/-1;text-align:center;padding:40px">Aucune boutique trouvée</p>';
+}
+function filterShops(v){renderShops(v);}
+
+function openShop(shopId){
+  const shop=DB.shops.find(s=>s.id===shopId);if(!shop)return;
+  const products=DB.products.filter(p=>shop.products.includes(p.id));
+  const canMsg=STATE.currentUser&&STATE.currentUser.role==='client';
+  document.getElementById('shop-detail-content').innerHTML=`
+    <div class="shop-header-banner" style="background:linear-gradient(135deg,${shop.color}90,${shop.color}30)">${shop.emoji}</div>
+    <div class="shop-profile">
+      <div class="shop-logo" style="border-color:${shop.color}80">${shop.emoji}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div class="shop-profile-name">${shop.name}</div>
+          ${canMsg?`<button class="btn btn-outline btn-sm" onclick="startConv('${shop.ownerId}')">💬 Contacter le vendeur</button>`:''}
+        </div>
+        <div class="shop-profile-desc">${shop.desc}</div>
+        <div class="shop-profile-stats">
+          <div class="shop-ps"><span class="val">⭐ ${shop.rating}</span><span class="lbl">Note</span></div>
+          <div class="shop-ps"><span class="val">${products.length}</span><span class="lbl">Produits</span></div>
+          <div class="shop-ps"><span class="val">${shop.sales}</span><span class="lbl">Ventes</span></div>
+        </div>
+      </div>
+    </div>
+    <h3 style="font-family:'Syne',sans-serif;font-size:20px;margin-bottom:20px">Produits disponibles</h3>
+    <div class="products-grid">${products.length?products.map(productCard).join(''):'<p style="color:var(--gray)">Aucun produit.</p>'}</div>`;
+  showPage('shop-detail');
+}
+
+// PRODUCTS
+const CATS=['Tous','Mode','Tech','Alimentation','Général'];
+function renderProducts(filter='',cat='Tous'){
+  document.getElementById('cat-tabs').innerHTML=CATS.map(c=>`<div class="cat-tab ${c===cat?'active':''}" onclick="renderProducts('${filter}','${c}')">${c}</div>`).join('');
+  let prods=DB.products;
+  if(filter)prods=prods.filter(p=>p.name.toLowerCase().includes(filter.toLowerCase()));
+  if(cat!=='Tous')prods=prods.filter(p=>p.category===cat);
+  document.getElementById('products-grid').innerHTML=prods.length?prods.map(productCard).join(''):'<p style="color:var(--gray);grid-column:1/-1;text-align:center;padding:40px">Aucun produit trouvé</p>';
+}
+function filterProducts(v){renderProducts(v);}
+function productCard(p){
+  const shop=DB.shops.find(s=>s.id===p.shopId);
+  return `<div class="product-card">
+    <div class="product-img">${p.emoji}<div class="product-badge"><span class="badge badge-gold">${p.category}</span></div></div>
+    <div class="product-info">
+      <div class="product-name">${p.name}</div>
+      <div class="product-shop">🏪 ${shop?shop.name:'ABL'}</div>
+      <div class="product-price">${fmt(p.price)}</div>
+      <div class="product-actions">
+        <button class="btn btn-gold btn-sm" onclick="addToCart('${p.id}')">🛒 Ajouter</button>
+        <button class="btn btn-dark btn-sm" onclick="openShop('${p.shopId}')">Boutique</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// CART
+function addToCart(productId){
+  if(!STATE.currentUser||STATE.currentUser.role!=='client'){toast('Connectez-vous en tant que client','error');return showPage('auth');}
+  const p=DB.products.find(x=>x.id===productId);if(!p)return;
+  const ex=STATE.cart.find(i=>i.productId===productId);
+  if(ex)ex.qty++;else STATE.cart.push({productId,qty:1});
+  updateCartCount();toast(p.emoji+' '+p.name+' ajouté au panier !','success');
+}
+function updateCartCount(){
+  document.getElementById('cart-count').textContent=STATE.cart.reduce((s,i)=>s+i.qty,0);
+}
+function openCart(){
+  if(!STATE.currentUser)return showPage('auth');
+  renderCartPanel();
+  document.getElementById('cart-panel').classList.add('open');
+  showOverlay(closeCart);
+}
+function closeCart(){document.getElementById('cart-panel').classList.remove('open');hideOverlay();}
+function showOverlay(fn){const o=document.getElementById('overlay');o.classList.remove('hidden');o.onclick=fn;}
+function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
+function renderCartPanel(){
+  const list=document.getElementById('cart-items-list');
+  if(!STATE.cart.length){
+    list.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray)">🛒<br><br>Votre panier est vide</div>';
+    document.getElementById('cart-total-val').textContent='0 FCFA';return;
+  }
+  let total=0;
+  list.innerHTML=STATE.cart.map(item=>{
+    const p=DB.products.find(pr=>pr.id===item.productId);if(!p)return'';
+    const sub=p.price*item.qty;total+=sub;
+    return `<div class="cart-item">
+      <div class="cart-item-emoji">${p.emoji}</div>
+      <div class="cart-item-info"><div class="cart-item-name">${p.name}</div><div style="font-size:11px;color:var(--gray);margin-bottom:4px">Qté: ${item.qty}</div><div class="cart-item-price">${fmt(sub)}</div></div>
+      <button class="cart-remove" onclick="removeFromCart('${item.productId}')">✕</button>
+    </div>`;
+  }).join('');
+  document.getElementById('cart-total-val').textContent=fmt(total);
+}
+function removeFromCart(productId){
+  STATE.cart=STATE.cart.filter(i=>i.productId!==productId);
+  updateCartCount();renderCartPanel();
+}
+
+// ═══════════════════════════════════════════════════
+//  💳 PAIEMENT WAVE & ORANGE MONEY
+// ═══════════════════════════════════════════════════
+function openPayment(){
+  if(!STATE.cart.length)return toast('Votre panier est vide','error');
+  const total=cartTotal();
+  STATE.payMethod='wave';
+  showModal(`<div class="modal" id="pay-modal">
+    <div class="modal-header"><div class="modal-title">💳 Paiement sécurisé ABL</div><button class="modal-close" onclick="closeModalDirect()">✕</button></div>
+    <div class="pay-progress"><div class="pay-prog-dot act" id="pd1"></div><div class="pay-prog-dot" id="pd2"></div><div class="pay-prog-dot" id="pd3"></div></div>
+    <div id="pay-c"></div>
+  </div>`);
+  payStep1(total);
+}
+function cartTotal(){return STATE.cart.reduce((s,i)=>{const p=DB.products.find(pr=>pr.id===i.productId);return s+(p?p.price*i.qty:0);},0);}
+function setProgress(step){
+  ['pd1','pd2','pd3'].forEach((id,i)=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.className='pay-prog-dot'+(i+1<step?' done':i+1===step?' act':'');
+  });
+}
+function payStep1(total){
+  setProgress(1);
+  const c=document.getElementById('pay-c');if(!c)return;
+  c.innerHTML=`
+    <p style="color:var(--gray);font-size:14px;margin-bottom:4px">Montant à régler</p>
+    <p style="font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--gold);margin-bottom:20px">${fmt(total)}</p>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Choisissez votre méthode de paiement :</p>
+    <div class="pay-methods">
+      <div class="pay-method wave-m selected" id="pm-wave" onclick="selPayMethod('wave')">
+        <div class="pay-method-logo" style="color:var(--wave)">〜</div>
+        <div class="pay-method-name" style="color:var(--wave)">Wave</div>
+        <div class="pay-method-sub">Paiement mobile instantané</div>
+      </div>
+      <div class="pay-method om-m" id="pm-om" onclick="selPayMethod('orange')">
+        <div class="pay-method-logo" style="color:var(--orange)">◉</div>
+        <div class="pay-method-name" style="color:var(--orange)">Orange Money</div>
+        <div class="pay-method-sub">Paiement mobile Orange</div>
+      </div>
+    </div>
+    <button class="btn btn-gold" style="width:100%;justify-content:center" onclick="payStep2(${total})">Continuer →</button>`;
+}
+function selPayMethod(m){
+  STATE.payMethod=m;
+  document.getElementById('pm-wave').classList.toggle('selected',m==='wave');
+  document.getElementById('pm-om').classList.toggle('selected',m==='orange');
+}
+function payStep2(total){
+  setProgress(2);
+  const isW=STATE.payMethod==='wave';
+  const color=isW?'var(--wave)':'var(--orange)';
+  const c=document.getElementById('pay-c');if(!c)return;
+  c.innerHTML=`
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:900;color:${color}">${isW?'〜 Wave':'◉ Orange Money'}</div>
+      <div style="font-size:13px;color:var(--gray);margin-top:6px">Entrez votre numéro ${isW?'Wave':'Orange Money'}</div>
+    </div>
+    <div class="input-group" style="margin-bottom:20px">
+      <label>Numéro de téléphone</label>
+      <div class="pay-phone-wrap">
+        <div class="pay-prefix">🇸🇳 +221</div>
+        <input class="pay-num" id="pay-phone" type="tel" placeholder="${isW?'77 123 45 67':'76 123 45 67'}" maxlength="14">
+      </div>
+    </div>
+    <div style="background:rgba(${isW?'29,200,255':'255,107,0'},.08);border:1px solid rgba(${isW?'29,200,255':'255,107,0'},.2);border-radius:var(--radius);padding:14px;font-size:13px;color:var(--gray);margin-bottom:20px">
+      💡 Un code OTP à 4 chiffres sera envoyé par SMS pour confirmer le paiement.
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-dark" onclick="payStep1(${total})">← Retour</button>
+      <button class="btn ${isW?'btn-wave':'btn-orange'}" style="flex:1;justify-content:center" onclick="sendOTP(${total})">Envoyer le code →</button>
+    </div>`;
+}
+function sendOTP(total){
+  const ph=document.getElementById('pay-phone');
+  if(!ph||ph.value.replace(/\D/g,'').length<8)return toast('Numéro invalide','error');
+  STATE.payPhone=ph.value;
+  const isW=STATE.payMethod==='wave';
+  toast('Code envoyé au +221 '+ph.value+' 📱',isW?'wave-t':'orange-t');
+  setTimeout(()=>payStep3(total),600);
+}
+function payStep3(total){
+  setProgress(3);
+  const isW=STATE.payMethod==='wave';
+  const color=isW?'var(--wave)':'var(--orange)';
+  const c=document.getElementById('pay-c');if(!c)return;
+  c.innerHTML=`
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:14px;color:var(--gray)">Code envoyé au</div>
+      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-top:4px">🇸🇳 +221 ${STATE.payPhone}</div>
+    </div>
+    <div style="font-size:13px;color:var(--gray);text-align:center;margin-bottom:14px">Entrez le code à 4 chiffres reçu par SMS</div>
+    <div class="otp-inputs">
+      <input class="otp-box" maxlength="1" id="o0" oninput="otpN(0)" onkeydown="otpB(event,0)">
+      <input class="otp-box" maxlength="1" id="o1" oninput="otpN(1)" onkeydown="otpB(event,1)">
+      <input class="otp-box" maxlength="1" id="o2" oninput="otpN(2)" onkeydown="otpB(event,2)">
+      <input class="otp-box" maxlength="1" id="o3" oninput="otpN(3)" onkeydown="otpB(event,3)">
+    </div>
+    <div style="text-align:center;font-size:12px;color:var(--gray);margin-bottom:20px">💡 Code démo : <strong style="color:${color}">1234</strong></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-dark" onclick="payStep2(${total})">← Retour</button>
+      <button class="btn ${isW?'btn-wave':'btn-orange'}" style="flex:1;justify-content:center" onclick="confirmPay(${total})">Confirmer</button>
+    </div>`;
+  setTimeout(()=>{const el=document.getElementById('o0');if(el)el.focus();},100);
+}
+function otpN(i){const el=document.getElementById('o'+i);if(el&&el.value&&i<3){const n=document.getElementById('o'+(i+1));if(n)n.focus();}}
+function otpB(e,i){if(e.key==='Backspace'&&!e.target.value&&i>0){const p=document.getElementById('o'+(i-1));if(p)p.focus();}}
+function confirmPay(total){
+  const code=[0,1,2,3].map(i=>{const el=document.getElementById('o'+i);return el?el.value:'';}).join('');
+  if(code!=='1234')return toast('Code incorrect — utilisez 1234 pour la démo','error');
+  finalizePay(total);
+}
+function finalizePay(total){
+  const commission=Math.round(total*0.01);
+  const order={id:genId(),clientId:STATE.currentUser.id,items:[...STATE.cart],total,status:'en cours',date:nowDate(),commission,payMethod:STATE.payMethod,payPhone:STATE.payPhone};
+  DB.orders.push(order);
+  STATE.cart.forEach(item=>{const p=DB.products.find(x=>x.id===item.productId);if(p){p.sold+=item.qty;p.stock=Math.max(0,p.stock-item.qty);}});
+  saveDB();STATE.cart=[];updateCartCount();
+  const isW=STATE.payMethod==='wave';
+  const color=isW?'var(--wave)':'var(--orange)';
+  const c=document.getElementById('pay-c');if(!c)return;
+  ['pd1','pd2','pd3'].forEach(id=>{const el=document.getElementById(id);if(el)el.className='pay-prog-dot done';});
+  c.innerHTML=`
+    <div style="text-align:center;padding:16px 0">
+      <div style="font-size:72px;animation:popIn .5s cubic-bezier(.34,1.8,.64,1)">${isW?'〜':'◉'}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:${color};margin-top:12px">Paiement confirmé !</div>
+      <div style="font-size:14px;color:var(--gray);margin-top:6px">Commande passée avec succès</div>
+    </div>
+    <div class="pay-receipt">
+      <div class="pay-receipt-row"><span>Méthode</span><span class="badge ${isW?'badge-wave':'badge-orange'}">${isW?'〜 Wave':'◉ Orange Money'}</span></div>
+      <div class="pay-receipt-row"><span>Référence</span><span style="color:var(--gray)">#${order.id}</span></div>
+      <div class="pay-receipt-row"><span>Date</span><span style="color:var(--gray)">${order.date}</span></div>
+      <div class="pay-receipt-row"><span>Commission ABL (1%)</span><span style="color:var(--success)">${fmt(commission)}</span></div>
+      <div class="pay-receipt-row"><span>Total payé</span><span>${fmt(total)}</span></div>
+    </div>
+    <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:20px" onclick="closeModalDirect()">Fermer le reçu ✓</button>`;
+  toast('✅ Paiement '+( isW?'Wave':'Orange Money')+' confirmé !',isW?'wave-t':'orange-t');
+}
+
+// ═══════════════════════════════════════════════════
+//  💬 MESSAGERIE
+// ═══════════════════════════════════════════════════
+function getConvs(){
+  if(!STATE.currentUser)return[];
+  const uid=STATE.currentUser.id;
+  const peers=new Set();
+  DB.messages.forEach(m=>{if(m.from===uid)peers.add(m.to);if(m.to===uid)peers.add(m.from);});
+  return Array.from(peers).map(peerId=>{
+    const peer=DB.users.find(u=>u.id===peerId);
+    const msgs=DB.messages.filter(m=>(m.from===uid&&m.to===peerId)||(m.from===peerId&&m.to===uid)).sort((a,b)=>a.ts-b.ts);
+    const last=msgs[msgs.length-1];
+    const unread=msgs.filter(m=>m.to===uid&&!m.read).length;
+    return{peerId,peer,msgs,last,unread};
+  }).sort((a,b)=>(b.last?.ts||0)-(a.last?.ts||0));
+}
+function countUnread(){if(!STATE.currentUser)return 0;return DB.messages.filter(m=>m.to===STATE.currentUser.id&&!m.read).length;}
+function updateMsgBadge(){
+  const n=countUnread();
+  const b=document.getElementById('msg-badge');
+  if(b){b.textContent=n;b.classList.toggle('hidden',n===0);}
+  ['sb-unread-c','sb-unread-s'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=n;el.classList.toggle('hidden',n===0);}});
+}
+function openMsg(){
+  if(!STATE.currentUser)return showPage('auth');
+  document.getElementById('msg-panel').classList.add('open');
+  showOverlay(closeMsg);
+  STATE.convId=null;renderConvList();
+}
+function closeMsg(){document.getElementById('msg-panel').classList.remove('open');hideOverlay();updateMsgBadge();}
+function renderConvList(){
+  const convs=getConvs();
+  const body=document.getElementById('msg-body');
+  if(!convs.length){
+    body.innerHTML='<div class="chat-empty"><div style="font-size:48px">💬</div><div>Aucune conversation</div><div style="font-size:12px;margin-top:4px;color:var(--gray)">Contactez un vendeur depuis une boutique</div></div>';
+    return;
+  }
+  body.innerHTML='<div class="conv-list">'+convs.map(conv=>`
+    <div class="conv-item ${STATE.convId===conv.peerId?'active':''}" onclick="openConv('${conv.peerId}')">
+      <div class="conv-av">${conv.peer?conv.peer.name[0].toUpperCase():'?'}</div>
+      <div class="conv-info"><div class="conv-name">${conv.peer?conv.peer.name:'?'}</div><div class="conv-last">${conv.last?conv.last.text:''}</div></div>
+      <div class="conv-meta">
+        <div class="conv-time">${conv.last?hhmm(conv.last.ts):''}</div>
+        ${conv.unread?'<div class="conv-unread">'+conv.unread+'</div>':''}
+      </div>
+    </div>`).join('')+'</div>';
+}
+function openConv(peerId){
+  STATE.convId=peerId;
+  DB.messages.forEach(m=>{if(m.from===peerId&&m.to===STATE.currentUser.id)m.read=true;});
+  saveDB();updateMsgBadge();
+  const peer=DB.users.find(u=>u.id===peerId);
+  const msgs=DB.messages.filter(m=>(m.from===STATE.currentUser.id&&m.to===peerId)||(m.from===peerId&&m.to===STATE.currentUser.id)).sort((a,b)=>a.ts-b.ts);
+  const body=document.getElementById('msg-body');
+  body.innerHTML=`<div class="chat-window">
+    <div class="chat-header">
+      <button class="chat-back" onclick="STATE.convId=null;renderConvList()">←</button>
+      <div class="conv-av" style="width:36px;height:36px;font-size:14px">${peer?peer.name[0].toUpperCase():'?'}</div>
+      <div><div class="chat-name">${peer?peer.name:'?'}</div><div class="chat-status">● En ligne</div></div>
+    </div>
+    <div class="chat-msgs" id="chat-msgs">
+      ${msgs.map(m=>{
+        const mine=m.from===STATE.currentUser.id;
+        return `<div><div class="bubble ${mine?'sent':'recv'}">${m.text}</div><div class="bubble-time ${mine?'sent':'recv'}">${hhmm(m.ts)}</div></div>`;
+      }).join('')}
+    </div>
+    <div class="chat-input-area">
+      <input class="chat-input" id="chat-in" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter')sendMsg('${peerId}')">
+      <button class="chat-send" onclick="sendMsg('${peerId}')">➤</button>
+    </div>
+  </div>`;
+  const cm=document.getElementById('chat-msgs');
+  if(cm)cm.scrollTop=cm.scrollHeight;
+  setTimeout(()=>{const f=document.getElementById('chat-in');if(f)f.focus();},100);
+}
+function sendMsg(peerId){
+  const inp=document.getElementById('chat-in');
+  const text=inp?inp.value.trim():'';if(!text)return;
+  const msg={id:genId(),from:STATE.currentUser.id,to:peerId,text,ts:Date.now(),read:false};
+  DB.messages.push(msg);saveDB();inp.value='';
+  openConv(peerId);
+  const peer=DB.users.find(u=>u.id===peerId);
+  if(peer&&peer.role==='seller'){
+    setTimeout(()=>{
+      const replies=['Merci pour votre message !','Bien reçu, je vérifie le stock.','Oui c\'est disponible !','Je vous réponds dans quelques instants.'];
+      const r={id:genId(),from:peerId,to:STATE.currentUser.id,text:replies[Math.floor(Math.random()*replies.length)],ts:Date.now(),read:false};
+      DB.messages.push(r);saveDB();
+      if(STATE.convId===peerId)openConv(peerId);
+      updateMsgBadge();
+      toast('💬 Nouveau message de '+peer.name,'info');
+    },1800);
+  }
+}
+function startConv(sellerId){
+  if(!STATE.currentUser){showPage('auth');return toast('Connectez-vous pour envoyer un message','error');}
+  openMsg();setTimeout(()=>openConv(sellerId),150);
+}
+
+// ─── CLIENT DASHBOARD
+function clientSection(s){STATE.clientSec=s;document.querySelectorAll('#page-client-dash .sidebar-item').forEach((el,i)=>el.classList.toggle('active',i===['overview','orders','messages'].indexOf(s)));renderClientDash();}
+function renderClientDash(){
+  if(!STATE.currentUser)return;
+  const s=STATE.clientSec;
+  const orders=DB.orders.filter(o=>o.clientId===STATE.currentUser.id);
+  const spent=orders.reduce((x,o)=>x+o.total,0);
+  const el=document.getElementById('client-dash-content');
+  if(s==='overview'){
+    el.innerHTML=`
+      <div class="page-header"><h2>Bonjour, <span class="gold">${STATE.currentUser.name.split(' ')[0]}</span> 👋</h2><p>Votre espace client ABL</p></div>
+      <div class="stats-grid">
+        <div class="card-stat"><div class="stat-label">Commandes</div><div class="stat-value">${orders.length}</div></div>
+        <div class="card-stat"><div class="stat-label">Total dépensé</div><div class="stat-value" style="font-size:20px">${fmt(spent)}</div></div>
+        <div class="card-stat"><div class="stat-label">Messages</div><div class="stat-value">${DB.messages.filter(m=>m.to===STATE.currentUser.id).length}</div></div>
+      </div>
+      <div class="page-header-row" style="margin-bottom:16px"><h3 style="font-family:'Syne',sans-serif;font-size:20px">Dernières commandes</h3><button class="btn btn-gold btn-sm" onclick="showPage('products')">Explorer les produits</button></div>
+      ${orders.slice(-3).reverse().map(orderRow).join('')||'<p style="color:var(--gray)">Aucune commande.</p>'}`;
+  } else if(s==='orders'){
+    el.innerHTML=`<div class="page-header"><h2>Mes <span class="gold">commandes</span></h2><p>Historique de vos achats</p></div>
+      ${orders.length?orders.slice().reverse().map(orderRow).join(''):'<p style="color:var(--gray)">Aucune commande.</p>'}`;
+  } else {
+    renderMsgSection(el);
+  }
+}
+function renderMsgSection(el){
+  const convs=getConvs();
+  el.innerHTML='<div class="page-header"><h2>Mes <span class="gold">messages</span></h2><p>Conversations avec les vendeurs</p></div>';
+  if(!convs.length){el.innerHTML+='<div style="text-align:center;padding:60px;color:var(--gray)">💬<br><br>Aucune conversation<br><br><button class="btn btn-gold btn-sm" onclick="showPage(&apos;shops&apos;)">Visiter les boutiques</button></div>';return;}
+  el.innerHTML+=convs.map(conv=>`
+    <div class="order-row" style="cursor:pointer" onclick="openMsg();setTimeout(()=>openConv('${conv.peerId}'),150)">
+      <div class="conv-av" style="width:42px;height:42px;border-radius:50%;flex-shrink:0">${conv.peer?conv.peer.name[0].toUpperCase():'?'}</div>
+      <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:2px">${conv.peer?conv.peer.name:'?'}</div><div style="font-size:12px;color:var(--gray)">${conv.last?conv.last.text.substring(0,60)+'...':''}</div></div>
+      ${conv.unread?`<span class="badge badge-red">${conv.unread} nouveau${conv.unread>1?'x':''}</span>`:'<span class="badge badge-green">Lu</span>'}
+    </div>`).join('');
+}
+function orderRow(o){
+  const sc={'livré':'badge-green','en cours':'badge-gold','expédié':'badge-gold','annulé':'badge-red'};
+  const pb=o.payMethod==='wave'?'badge-wave':'badge-orange';
+  const pl=o.payMethod==='wave'?'〜 Wave':'◉ Orange Money';
+  const items=o.items.map(i=>{const p=DB.products.find(pr=>pr.id===i.productId);return p?p.emoji+' '+p.name:''}).join(', ');
+  return `<div class="order-row">
+    <div style="font-size:28px">📦</div>
+    <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600">${items}</div><div style="font-size:12px;color:var(--gray);margin-top:2px">${o.date} · <span class="badge ${pb}" style="font-size:10px">${pl}</span></div></div>
+    <div style="text-align:right"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--gold)">${fmt(o.total)}</div><span class="badge ${sc[o.status]||'badge-gold'}" style="margin-top:4px">${o.status}</span></div>
+  </div>`;
+}
+
+// ─── SELLER DASHBOARD
+function sellerSection(s){STATE.sellerSec=s;document.querySelectorAll('#page-seller-dash .sidebar-item').forEach((el,i)=>el.classList.toggle('active',i===['overview','products','orders','messages','shop-settings'].indexOf(s)));renderSellerDash();}
+function renderSellerDash(){
+  if(!STATE.currentUser)return;
+  const shop=DB.shops.find(s=>s.id===STATE.currentUser.shopId);if(!shop)return;
+  const s=STATE.sellerSec;
+  const prods=DB.products.filter(p=>shop.products.includes(p.id));
+  const orders=DB.orders.filter(o=>o.items.some(i=>prods.find(p=>p.id===i.productId)));
+  const rev=orders.reduce((x,o)=>x+o.total,0);
+  const commission=Math.round(rev*0.01);
+  const waveSales=orders.filter(o=>o.payMethod==='wave').reduce((x,o)=>x+o.total,0);
+  const omSales=orders.filter(o=>o.payMethod==='orange').reduce((x,o)=>x+o.total,0);
+  const el=document.getElementById('seller-dash-content');
+
+  if(s==='overview'){
+    el.innerHTML=`
+      <div class="page-header-row" style="margin-bottom:28px">
+        <div><h2>Ma boutique: <span class="gold">${shop.name}</span></h2><p>${prods.length} produits · ${orders.length} commandes</p></div>
+        <button class="btn btn-gold" onclick="openAddProduct()">+ Ajouter un produit</button>
+      </div>
+      <div class="stats-grid">
+        <div class="card-stat"><div class="stat-label">Chiffre d'affaires</div><div class="stat-value" style="font-size:20px">${fmt(rev)}</div></div>
+        <div class="card-stat"><div class="stat-label">Commission ABL (1%)</div><div class="stat-value" style="font-size:20px;color:var(--danger)">${fmt(commission)}</div></div>
+        <div class="card-stat"><div class="stat-label">Revenu net</div><div class="stat-value" style="font-size:20px;color:var(--success)">${fmt(rev-commission)}</div></div>
+        <div class="card-stat"><div class="stat-label">Produits</div><div class="stat-value">${prods.length}</div></div>
+      </div>
+      <div class="form-grid form-grid-2" style="margin-bottom:24px">
+        <div class="card" style="border-color:rgba(29,200,255,.2)"><div style="font-size:11px;color:var(--wave);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">〜 Via Wave</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--wave)">${fmt(waveSales)}</div><div style="font-size:12px;color:var(--gray);margin-top:4px">${orders.filter(o=>o.payMethod==='wave').length} paiements</div></div>
+        <div class="card" style="border-color:rgba(255,107,0,.2)"><div style="font-size:11px;color:var(--orange);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">◉ Via Orange Money</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--orange)">${fmt(omSales)}</div><div style="font-size:12px;color:var(--gray);margin-top:4px">${orders.filter(o=>o.payMethod==='orange').length} paiements</div></div>
+      </div>
+      <div class="table-wrap"><table>
+        <tr><th>Produit</th><th>Prix</th><th>Stock</th><th>Vendus</th><th>Actions</th></tr>
+        ${prods.map(p=>`<tr><td>${p.emoji} ${p.name}</td><td style="color:var(--gold);font-weight:700">${fmt(p.price)}</td><td>${p.stock}</td><td>${p.sold}</td><td><button class="btn btn-dark btn-sm" onclick="openEditProduct('${p.id}')">✏️</button> <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--gray);text-align:center">Aucun produit</td></tr>'}
+      </table></div>`;
+  } else if(s==='products'){
+    el.innerHTML=`<div class="page-header-row" style="margin-bottom:28px"><div><h2>Mes <span class="gold">produits</span></h2></div><button class="btn btn-gold" onclick="openAddProduct()">+ Ajouter</button></div>
+      <div class="products-grid">${prods.map(p=>`<div class="product-card"><div class="product-img">${p.emoji}</div><div class="product-info"><div class="product-name">${p.name}</div><div class="product-price">${fmt(p.price)}</div><div style="font-size:12px;color:var(--gray);margin:6px 0">Stock: ${p.stock} · Vendus: ${p.sold}</div><div class="product-actions"><button class="btn btn-gold btn-sm" onclick="openEditProduct('${p.id}')">✏️ Modifier</button><button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">🗑️</button></div></div></div>`).join('')||'<p style="color:var(--gray)">Aucun produit.</p>'}</div>`;
+  } else if(s==='orders'){
+    el.innerHTML=`<div class="page-header"><h2>Commandes <span class="gold">reçues</span></h2><p>${orders.length} commandes</p></div>
+      ${orders.map(o=>{
+        const items=o.items.filter(i=>prods.find(p=>p.id===i.productId)).map(i=>{const p=DB.products.find(pr=>pr.id===i.productId);return p?p.emoji+' '+p.name+' x'+i.qty:'';}).join(', ');
+        const client=DB.users.find(u=>u.id===o.clientId);
+        const sc={'livré':'badge-green','en cours':'badge-gold','expédié':'badge-gold','annulé':'badge-red'};
+        const pb=o.payMethod==='wave'?'badge-wave':'badge-orange';
+        return `<div class="order-row">
+          <div style="font-size:28px">📦</div>
+          <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600">${items}</div><div style="font-size:12px;color:var(--gray);margin-top:2px">${o.date} · ${client?client.name:'?'} · <span class="badge ${pb}" style="font-size:10px">${o.payMethod==='wave'?'Wave':'Orange Money'}</span></div></div>
+          <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--gold)">${fmt(o.total)}</div>
+            <span class="badge ${sc[o.status]||'badge-gold'}">${o.status}</span>
+            <select class="input-field" style="padding:4px 8px;font-size:11px;width:auto" onchange="updateOrderStatus('${o.id}',this.value)">
+              ${['en cours','expédié','livré','annulé'].map(st=>`<option ${st===o.status?'selected':''}>${st}</option>`).join('')}
+            </select>
+          </div>
+        </div>`;
+      }).join('')||'<p style="color:var(--gray)">Aucune commande.</p>'}`;
+  } else if(s==='messages'){
+    renderMsgSection(el);
+  } else if(s==='shop-settings'){
+    el.innerHTML=`<div class="page-header"><h2>Ma <span class="gold">boutique</span></h2><p>Personnalisez votre espace de vente</p></div>
+      <div class="card" style="max-width:600px"><div class="form-grid">
+        <div class="input-group"><label>Nom de la boutique</label><input class="input-field" id="es-name" value="${shop.name}"></div>
+        <div class="input-group"><label>Description</label><textarea class="input-field" id="es-desc">${shop.desc}</textarea></div>
+        <div class="input-group"><label>Catégorie</label><select class="input-field" id="es-cat">${['Général','Mode','Tech','Alimentation','Beauté','Sport'].map(c=>`<option ${c===shop.category?'selected':''}>${c}</option>`).join('')}</select></div>
+        <div class="form-grid form-grid-2">
+          <div class="input-group"><label>Emoji</label><input class="input-field" id="es-emoji" value="${shop.emoji}" style="font-size:24px"></div>
+          <div class="input-group"><label>Couleur bannière</label><input class="input-field" type="color" id="es-color" value="${shop.color}" style="height:48px;padding:4px"></div>
+        </div>
+        <button class="btn btn-gold" onclick="saveShopSettings('${shop.id}')">💾 Sauvegarder</button>
+      </div></div>`;
+  }
+}
+
+function openAddProduct(){
+  showModal(`<div class="modal"><div class="modal-header"><div class="modal-title">➕ Ajouter un produit</div><button class="modal-close" onclick="closeModalDirect()">✕</button></div>
+    <div class="form-grid">
+      <div class="form-grid form-grid-2"><div class="input-group"><label>Nom</label><input class="input-field" id="np-name" placeholder="Mon produit..."></div><div class="input-group"><label>Emoji</label><input class="input-field" id="np-emoji" placeholder="📦" style="font-size:24px"></div></div>
+      <div class="form-grid form-grid-2"><div class="input-group"><label>Prix (FCFA)</label><input class="input-field" type="number" id="np-price" placeholder="25000"></div><div class="input-group"><label>Stock</label><input class="input-field" type="number" id="np-stock" placeholder="10"></div></div>
+      <div class="input-group"><label>Catégorie</label><select class="input-field" id="np-cat">${['Général','Mode','Tech','Alimentation','Beauté','Sport'].map(c=>`<option>${c}</option>`).join('')}</select></div>
+      <div class="input-group"><label>Description</label><textarea class="input-field" id="np-desc" placeholder="Décrivez votre produit..."></textarea></div>
+      <button class="btn btn-gold" onclick="addProduct()" style="width:100%;justify-content:center">Ajouter →</button>
+    </div></div>`);
+}
+function addProduct(){
+  const shop=DB.shops.find(s=>s.id===STATE.currentUser.shopId);
+  const name=document.getElementById('np-name').value.trim();
+  const emoji=document.getElementById('np-emoji').value.trim()||'📦';
+  const price=parseInt(document.getElementById('np-price').value);
+  const stock=parseInt(document.getElementById('np-stock').value)||0;
+  const cat=document.getElementById('np-cat').value;
+  const desc=document.getElementById('np-desc').value.trim();
+  if(!name||!price)return toast('Nom et prix obligatoires','error');
+  const prod={id:genId(),shopId:shop.id,name,emoji,price,stock,category:cat,desc:desc||name,sold:0};
+  DB.products.push(prod);shop.products.push(prod.id);saveDB();
+  closeModalDirect();toast(emoji+' '+name+' ajouté !','success');renderSellerDash();
+}
+function openEditProduct(prodId){
+  const p=DB.products.find(pr=>pr.id===prodId);if(!p)return;
+  showModal(`<div class="modal"><div class="modal-header"><div class="modal-title">✏️ Modifier ${p.name}</div><button class="modal-close" onclick="closeModalDirect()">✕</button></div>
+    <div class="form-grid">
+      <div class="form-grid form-grid-2"><div class="input-group"><label>Nom</label><input class="input-field" id="ep-name" value="${p.name}"></div><div class="input-group"><label>Emoji</label><input class="input-field" id="ep-emoji" value="${p.emoji}" style="font-size:24px"></div></div>
+      <div class="form-grid form-grid-2"><div class="input-group"><label>Prix (FCFA)</label><input class="input-field" type="number" id="ep-price" value="${p.price}"></div><div class="input-group"><label>Stock</label><input class="input-field" type="number" id="ep-stock" value="${p.stock}"></div></div>
+      <div class="input-group"><label>Catégorie</label><select class="input-field" id="ep-cat">${['Général','Mode','Tech','Alimentation','Beauté','Sport'].map(c=>`<option ${c===p.category?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div class="input-group"><label>Description</label><textarea class="input-field" id="ep-desc">${p.desc}</textarea></div>
+      <button class="btn btn-gold" onclick="saveProduct('${p.id}')" style="width:100%;justify-content:center">💾 Sauvegarder</button>
+    </div></div>`);
+}
+function saveProduct(prodId){
+  const p=DB.products.find(pr=>pr.id===prodId);if(!p)return;
+  p.name=document.getElementById('ep-name').value.trim()||p.name;
+  p.emoji=document.getElementById('ep-emoji').value.trim()||p.emoji;
+  p.price=parseInt(document.getElementById('ep-price').value)||p.price;
+  p.stock=parseInt(document.getElementById('ep-stock').value)??p.stock;
+  p.category=document.getElementById('ep-cat').value;
+  p.desc=document.getElementById('ep-desc').value.trim()||p.desc;
+  saveDB();closeModalDirect();toast('Produit mis à jour ✅','success');renderSellerDash();
+}
+function deleteProduct(prodId){
+  if(!confirm('Supprimer ce produit ?'))return;
+  const shop=DB.shops.find(s=>s.id===STATE.currentUser.shopId);
+  shop.products=shop.products.filter(id=>id!==prodId);
+  DB.products=DB.products.filter(p=>p.id!==prodId);
+  saveDB();toast('Produit supprimé','info');renderSellerDash();
+}
+function saveShopSettings(shopId){
+  const shop=DB.shops.find(s=>s.id===shopId);
+  shop.name=document.getElementById('es-name').value.trim()||shop.name;
+  shop.desc=document.getElementById('es-desc').value.trim()||shop.desc;
+  shop.category=document.getElementById('es-cat').value;
+  shop.emoji=document.getElementById('es-emoji').value.trim()||shop.emoji;
+  shop.color=document.getElementById('es-color').value||shop.color;
+  saveDB();toast('Boutique mise à jour ✅','success');
+}
+function updateOrderStatus(orderId,status){
+  const order=DB.orders.find(o=>o.id===orderId);
+  if(order){order.status=status;saveDB();toast('Statut mis à jour','success');}
+}
+
+// ─── ADMIN DASHBOARD
+function adminSection(s){STATE.adminSec=s;document.querySelectorAll('#page-admin-dash .sidebar-item').forEach((el,i)=>el.classList.toggle('active',i===['overview','sellers','clients','orders','payments','commissions','settings'].indexOf(s)));renderAdminDash();}
+function renderAdminDash(){
+  const s=STATE.adminSec;
+  const sellers=DB.users.filter(u=>u.role==='seller');
+  const clients=DB.users.filter(u=>u.role==='client');
+  const totalRev=DB.orders.reduce((x,o)=>x+o.total,0);
+  const totalCom=DB.orders.reduce((x,o)=>x+o.commission,0);
+  const waveSales=DB.orders.filter(o=>o.payMethod==='wave').reduce((x,o)=>x+o.total,0);
+  const omSales=DB.orders.filter(o=>o.payMethod==='orange').reduce((x,o)=>x+o.total,0);
+  const el=document.getElementById('admin-dash-content');
+
+  if(s==='overview'){
+    el.innerHTML=`
+      <div class="page-header"><h2>Tableau de bord <span class="gold">Admin</span></h2><p>Vue d'ensemble de la plateforme ABL</p></div>
+      <div class="stats-grid">
+        <div class="card-stat"><div class="stat-label">Boutiques</div><div class="stat-value">${DB.shops.length}</div></div>
+        <div class="card-stat"><div class="stat-label">Vendeurs</div><div class="stat-value">${sellers.length}</div></div>
+        <div class="card-stat"><div class="stat-label">Clients</div><div class="stat-value">${clients.length}</div></div>
+        <div class="card-stat"><div class="stat-label">Commandes</div><div class="stat-value">${DB.orders.length}</div></div>
+        <div class="card-stat"><div class="stat-label">CA Total</div><div class="stat-value" style="font-size:18px">${fmt(totalRev)}</div></div>
+        <div class="card-stat"><div class="stat-label">Commissions ABL</div><div class="stat-value" style="font-size:18px;color:var(--success)">${fmt(totalCom)}</div></div>
+      </div>
+      <div class="form-grid form-grid-2" style="margin-bottom:24px">
+        <div class="card" style="border-color:rgba(29,200,255,.2)"><div style="font-size:11px;color:var(--wave);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">〜 Wave — Total</div><div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--wave)">${fmt(waveSales)}</div><div style="font-size:12px;color:var(--gray);margin-top:4px">${DB.orders.filter(o=>o.payMethod==='wave').length} transactions</div></div>
+        <div class="card" style="border-color:rgba(255,107,0,.2)"><div style="font-size:11px;color:var(--orange);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">◉ Orange Money — Total</div><div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--orange)">${fmt(omSales)}</div><div style="font-size:12px;color:var(--gray);margin-top:4px">${DB.orders.filter(o=>o.payMethod==='orange').length} transactions</div></div>
+      </div>`;
+  } else if(s==='payments'){
+    el.innerHTML=`<div class="page-header"><h2>Tous les <span class="gold">paiements</span></h2><p>Transactions Wave & Orange Money</p></div>
+      <div class="form-grid form-grid-2" style="margin-bottom:24px">
+        <div class="card" style="border-color:rgba(29,200,255,.2)"><div style="font-size:11px;color:var(--wave);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">〜 Wave</div><div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--wave)">${fmt(waveSales)}</div></div>
+        <div class="card" style="border-color:rgba(255,107,0,.2)"><div style="font-size:11px;color:var(--orange);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">◉ Orange Money</div><div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--orange)">${fmt(omSales)}</div></div>
+      </div>
+      <div class="table-wrap"><table>
+        <tr><th>Réf.</th><th>Client</th><th>Méthode</th><th>Montant</th><th>Commission (1%)</th><th>Statut</th><th>Date</th></tr>
+        ${DB.orders.map(o=>{
+          const client=DB.users.find(u=>u.id===o.clientId);
+          const isW=o.payMethod==='wave';
+          const sc={'livré':'badge-green','en cours':'badge-gold','expédié':'badge-gold','annulé':'badge-red'};
+          return `<tr><td style="color:var(--gray);font-size:11px">#${o.id}</td><td>${client?client.name:'?'}</td><td><span class="badge ${isW?'badge-wave':'badge-orange'}">${isW?'〜 Wave':'◉ Orange'}</span></td><td style="color:var(--gold);font-weight:700">${fmt(o.total)}</td><td style="color:var(--success)">${fmt(o.commission)}</td><td><span class="badge ${sc[o.status]||'badge-gold'}">${o.status}</span></td><td style="color:var(--gray)">${o.date}</td></tr>`;
+        }).join('')}
+      </table></div>`;
+  } else if(s==='sellers'){
+    el.innerHTML=`<div class="page-header"><h2><span class="gold">Vendeurs</span></h2><p>${sellers.length} vendeurs enregistrés</p></div>
+      <div class="table-wrap"><table><tr><th>Vendeur</th><th>Email</th><th>Boutique</th><th>Produits</th><th>Statut</th></tr>
+      ${sellers.map(u=>{const shop=DB.shops.find(s=>s.id===u.shopId);return`<tr><td>${u.name}</td><td style="color:var(--gray)">${u.email}</td><td>${shop?shop.emoji+' '+shop.name:'Aucune'}</td><td>${shop?shop.products.length:0}</td><td><span class="badge badge-green">Actif</span></td></tr>`;}).join('')}
+      </table></div>`;
+  } else if(s==='clients'){
+    el.innerHTML=`<div class="page-header"><h2><span class="gold">Clients</span></h2><p>${clients.length} clients enregistrés</p></div>
+      <div class="table-wrap"><table><tr><th>Client</th><th>Email</th><th>Commandes</th><th>Total dépensé</th></tr>
+      ${clients.map(u=>{const ords=DB.orders.filter(o=>o.clientId===u.id);const sp=ords.reduce((x,o)=>x+o.total,0);return`<tr><td>${u.name}</td><td style="color:var(--gray)">${u.email}</td><td>${ords.length}</td><td style="color:var(--gold);font-weight:700">${fmt(sp)}</td></tr>`;}).join('')}
+      </table></div>`;
+  } else if(s==='orders'){
+    el.innerHTML=`<div class="page-header"><h2>Toutes les <span class="gold">commandes</span></h2></div>
+      <div class="table-wrap"><table><tr><th>ID</th><th>Client</th><th>Paiement</th><th>Montant</th><th>Commission</th><th>Statut</th><th>Date</th></tr>
+      ${DB.orders.map(o=>{const client=DB.users.find(u=>u.id===o.clientId);const isW=o.payMethod==='wave';const sc={'livré':'badge-green','en cours':'badge-gold','expédié':'badge-gold','annulé':'badge-red'};return`<tr><td style="color:var(--gray);font-size:11px">#${o.id}</td><td>${client?client.name:'?'}</td><td><span class="badge ${isW?'badge-wave':'badge-orange'}">${isW?'Wave':'Orange Money'}</span></td><td style="color:var(--gold);font-weight:700">${fmt(o.total)}</td><td style="color:var(--success)">${fmt(o.commission)}</td><td><span class="badge ${sc[o.status]||'badge-gold'}">${o.status}</span></td><td style="color:var(--gray)">${o.date}</td></tr>`;}).join('')}
+      </table></div>`;
+  } else if(s==='commissions'){
+    el.innerHTML=`<div class="page-header"><h2>Commissions <span class="gold">ABL (1%)</span></h2></div>
+      <div class="stats-grid"><div class="card-stat"><div class="stat-label">Total commissions</div><div class="stat-value">${fmt(totalCom)}</div></div><div class="card-stat"><div class="stat-label">Commission moyenne</div><div class="stat-value">${fmt(DB.orders.length?Math.round(totalCom/DB.orders.length):0)}</div></div></div>
+      ${DB.shops.map(shop=>{const prods=DB.products.filter(p=>shop.products.includes(p.id));const ords=DB.orders.filter(o=>o.items.some(i=>prods.find(p=>p.id===i.productId)));const rev=ords.reduce((x,o)=>x+o.total,0);const com=Math.round(rev*0.01);const pct=totalRev?Math.min(100,Math.round(rev/totalRev*100)):0;
+        return`<div class="card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:'Syne',sans-serif;font-weight:700">${shop.emoji} ${shop.name}</span><span style="color:var(--success);font-family:'Syne',sans-serif;font-weight:700">${fmt(com)}</span></div><div style="font-size:12px;color:var(--gray);margin-bottom:8px">CA: ${fmt(rev)} · ${ords.length} commandes</div><div class="profit-bar"><div class="profit-fill" style="width:${pct}%"></div></div></div>`;}).join('')}`;
+  } else if(s==='settings'){
+    el.innerHTML=`<div class="page-header"><h2>Paramètres <span class="gold">plateforme</span></h2></div>
+      <div class="card" style="max-width:500px"><div class="form-grid">
+        <div class="input-group"><label>Taux de commission (%)</label><input class="input-field" value="1" readonly></div>
+        <div class="input-group"><label>Nom de la plateforme</label><input class="input-field" value="ABL – All Business Life"></div>
+        <div class="input-group"><label>Email de contact</label><input class="input-field" value="contact@abl.sn"></div>
+        <div class="input-group"><label>Méthodes de paiement actives</label><div style="display:flex;gap:10px;margin-top:4px"><span class="badge badge-wave">〜 Wave ✓</span><span class="badge badge-orange">◉ Orange Money ✓</span></div></div>
+        <button class="btn btn-gold" onclick="toast('Paramètres sauvegardés ✅','success')">💾 Sauvegarder</button>
+      </div></div>`;
+  }
+}
+
+// INIT
+updateHeroStats();renderShops();renderProducts();
+</script>
+</body>
+</html>
